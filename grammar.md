@@ -1,0 +1,40 @@
+TOKEN: "(" ")" "+" "-" "*" "/" "if" "goto" "var" ":"
+
+<TOPLEVEL>:=
+    {<STATEMENT>;}
+    | <LABEL>
+
+<LABEL>:=
+    <IDENTIFIER>:
+
+<STATEMENT>:=
+    <IF_STATEMENT>
+    <GOTO_STATEMENT>
+    <VARIABLE_DECLARE>
+    <BINARY_EXPRESSION>
+
+<IF_GOTO_STATEMENT>:=
+    if "("<EXPRESSION>")" goto <IDENTIFIER>
+
+<VARIABLE_DECLARE>:=
+    var <IDENTIFIER> (= <EXPRESSION>)?
+
+<INT_CONSTANT>:=
+    digit+
+
+
+<BINARY_EXPRESSION>:=
+    <FACTOR> {<OPERATOR> <FACTOR>}?
+
+<FACTOR>:=
+    <INT_CONSTANT>
+    "(" <EXPRESSION> ")"
+    <IDENTIFIER_EXPRESSION>
+
+<IDENTIFIER_EXPRESSION>:=
+    | IDENTIFIER
+    | IDENTIFIER"("<ARG_LIST>")"
+
+<ARG_LIST>:=
+    <EXPRESSION> {"," <EXPRESSION>}
+
