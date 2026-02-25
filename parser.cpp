@@ -136,14 +136,22 @@ ASTNode* Parser::parseBinaryRight(ASTNode* lhs, int minPrec) {
 }
 
 ASTNode* Parser::parseFactor() {
+    ASTNode* expr = nullptr;
     switch (t.peek().type){
-    case TOK_ID:
-        return parseIdentifierExpression();
-        break;
-    case TOK_NUMBER:
-        return parseIntConstant();
-    default:
-        return nullptr;
+        case TOK_ID:
+            return parseIdentifierExpression();
+            break;
+        case TOK_NUMBER:
+            return parseIntConstant();
+            break;
+        case TOK_OP_LEFTPAR:
+            t.consume();
+            expr = parseExpression();
+            t.expect(TOK_OP_RIGHTPAR, "Execept right par");
+            t.consume();
+            return expr;
+        default:
+            return nullptr;
     }
 }
 
