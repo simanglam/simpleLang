@@ -1,0 +1,34 @@
+var prev = 1;
+var cur = 0;
+var temp = 0;
+var count = 0;
+var tempInput = 48;
+
+inputLoop:
+    count = count * 10 + (tempInput - 48);
+    tempInput = get();
+    if (tempInput + 1) goto inputLoop;
+
+inputLoopEnd:
+
+if (count) goto fiboStart;
+goto fiboEnd;
+
+fiboStart:
+    temp = cur;
+    cur = cur + prev;
+    prev = temp;
+    count = count - 1;
+    if (count) goto fiboStart;
+
+fiboEnd:
+    temp = cur;
+    if (temp / 10) goto getFirst;
+    goto notGetFirst;
+getFirst:
+    temp = temp / 10;
+    if (temp / 10) goto getFirst;
+notGetFirst:
+    print(temp + 48);
+    cur = cur / 10;
+    if (cur) goto fiboEnd;
