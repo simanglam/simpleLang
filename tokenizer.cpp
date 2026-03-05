@@ -1,4 +1,30 @@
 #include "tokenizer.h"
+#include <map>
+
+static map<int, string> tokenTypeMap {
+    {TOK_OP_ADD, "ADD"},
+    {TOK_OP_SUB, "SUB"},
+    {TOK_OP_MUL, "MUL"},
+    {TOK_OP_DIV, "DIV"},
+    {TOK_OP_ASSIGN, "ASSIGN"},
+    {TOK_OP_LEFTPAR, "LEFT_PAR"},
+    {TOK_OP_RIGHTPAR, "RIGHT_PAR"},
+    {TOK_COLON, "COLON"},
+    {TOK_SEMICOLON, "SEMICOLON"},
+    {TOK_COMMA, "COMMA"},
+    {TOK_IF, "IF"},
+    {TOK_GOTO, "GOTO"},
+    {TOK_VAR, "VAR"},
+    {TOK_NUMBER, "NUMBER"},
+    {TOK_ID, "ID"},
+    {TOK_EOF, "EOF"}
+
+};
+
+std::ostream& operator<<(std::ostream& os, Token t) {
+    os << "Token: " << t.id << " with type: " << tokenTypeMap[t.type];
+    return os;
+}
 
 bool isWhiteSpace(char c) {
     return (c == ' ') || (c == '\n') || (c == '\r') || (c == '\t');
@@ -98,6 +124,7 @@ Token Tokenizer::consume() {
                     buffer += currentChar;
                     inputCharStream >> currentChar;
                 } while (isAlpha(currentChar) && inputCharStream.good());
+                nextToken.id = buffer;
                 if (buffer == "if")
                     nextToken.type = TOK_IF;
                 else if (buffer == "goto")
@@ -106,7 +133,6 @@ Token Tokenizer::consume() {
                     nextToken.type = TOK_VAR;
                 else {
                     nextToken.type = TOK_ID;
-                    nextToken.id = buffer;
                 }
             }
             break;

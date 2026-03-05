@@ -94,8 +94,8 @@ ASTNode* Parser::parseDeclare() {
     ASTNode* initValue = nullptr;
     if (t.match(TOK_OP_ASSIGN)){
         t.consume();
-        initValue = parseExpression();
         cerr << "Good varible declare with init val found" << endl;
+        initValue = parseExpression();
     }
     
     cerr << "Good varible declare found" << endl;
@@ -129,6 +129,8 @@ ASTNode* Parser::parseBinaryRight(ASTNode* lhs, int minPrec) {
                 return nullptr;
             }
         }
+        if (!rhs)
+            return lhs;
         lhs = new BinaryExpressionNode(op, lhs, rhs);
         cerr << "meet op " << endl;
     }
