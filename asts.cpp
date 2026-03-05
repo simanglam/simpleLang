@@ -19,6 +19,8 @@ Value* LabelNode::codeGen(Compiler& c) {
             bi->setSuccessor(0, c.lables[id]);
         }
     }
+    c.pending[id].clear();
+    c.pending.erase(id);
     c.builder->CreateBr(c.lables[id]);
     c.builder->SetInsertPoint(c.lables[id]);
     return c.lables[id];
@@ -28,10 +30,10 @@ Value* LabelNode::codeGen(Compiler& c) {
 GotoNode::GotoNode(std::string _targetLabel, ASTNode* _cond): targetLabel(_targetLabel), cond(_cond) { }
 
 Value* GotoNode::codeGen(Compiler& c) {
-    BranchInst* ins;
+    BranchInst* ins = nullptr;
     BasicBlock* TargetBlock = c.lables[targetLabel];
     if (!TargetBlock)
-        TargetBlock = &c.module->getFunction("main")->getEntryBlock();
+        TargetBlock = c.module->getFunction("main")->getEntryBlock().getNextNode();
     if (!cond)
         ins = c.builder->CreateBr(TargetBlock);
     else {
@@ -72,7 +74,8 @@ llvm::Value* BinaryExpressionNode::codeGen(Compiler& c) {
 DeclareNode::DeclareNode(string _id, ASTNode* _initVal): id(_id), initVal(_initVal) { }
 
 llvm::Value* DeclareNode::codeGen(Compiler& c) {
-    AllocaInst* var = c.builder->CreateAlloca(c.builder->getInt32Ty(), nullptr, id);
+    llvm::IRBuilder<> tempBuilder(&c.module->getFunction("main")->getEntryBlock(), c.module->getFunction("main")->getEntryBlock().begin());
+    AllocaInst* var = tempBuilder.CreateAlloca(tempBuilder.getInt32Ty(), nullptr, id);
     c.vars[id] = var;
     if (initVal)
         c.builder->CreateStore(initVal->codeGen(c), var);

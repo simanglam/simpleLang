@@ -1,8 +1,7 @@
 #include<stdio.h>
 
 int print(int i) {
-    putchar(i);
-    return 1;
+    return putchar(i);
 }
 
 int get() {

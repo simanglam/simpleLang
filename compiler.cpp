@@ -26,6 +26,11 @@ int main() {
     llvm::Function* F = llvm::Function::Create(FT, llvm::GlobalValue::ExternalLinkage, llvm::Twine("main"), c.module);
 
     c.builder->SetInsertPoint(llvm::BasicBlock::Create(*c.context, "entry", F));
+    llvm::BasicBlock* tstartBlock = llvm::BasicBlock::Create(*c.context, "tstart", F);
+    c.builder->CreateBr(tstartBlock);
+
+
+    c.builder->SetInsertPoint(tstartBlock);
 
     ASTNode* a = nullptr;
     while((a = p.parseProgram()) != nullptr){
