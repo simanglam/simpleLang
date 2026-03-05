@@ -8,13 +8,16 @@ TOKEN: "(" ")" "+" "-" "*" "/" "if" "goto" "var" ":"
     <IDENTIFIER>:
 
 <STATEMENT>:=
-    <IF_STATEMENT>
+    <IF_GOTO_STATEMENT>
     <GOTO_STATEMENT>
     <VARIABLE_DECLARE>
     <BINARY_EXPRESSION>
 
 <IF_GOTO_STATEMENT>:=
     if "("<EXPRESSION>")" goto <IDENTIFIER>
+
+<GOTO_STATEMENT>:=
+    goto <IDENTIFIER>
 
 <VARIABLE_DECLARE>:=
     var <IDENTIFIER> (= <EXPRESSION>)?
