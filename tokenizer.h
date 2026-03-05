@@ -21,6 +21,7 @@ struct Token {
     TOKEN_TYPE type;
     int val;
     string id;
+    friend std::ostream& operator<<(std::ostream&, Token);
 };
 
 class Tokenizer {
