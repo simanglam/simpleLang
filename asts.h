@@ -12,7 +12,9 @@
 class ASTNode {
 public:
     ASTNode() { };
+    friend std::ofstream& operator<<(std::ostream&, ASTNode*);
     virtual llvm::Value* codeGen(Compiler&) = 0;
+    virtual void print(std::ostream&) = 0;
 };
 
 class LabelNode : public ASTNode{
@@ -21,6 +23,7 @@ private:
 public:
     LabelNode(std::string);
     llvm::Value* codeGen(Compiler&) override;
+    void print(std::ostream&) override;
 };
 
 class GotoNode : public ASTNode{
@@ -30,6 +33,7 @@ private:
 public:
     GotoNode(std::string, ASTNode* = nullptr);
     llvm::Value* codeGen(Compiler&) override;
+    void print(std::ostream&) override;
 };
 
 class BinaryExpressionNode : public ASTNode {
@@ -39,6 +43,7 @@ private:
 public:
     BinaryExpressionNode(std::string, ASTNode*, ASTNode*);
     llvm::Value* codeGen(Compiler&) override;
+    void print(std::ostream&) override;
 };
 
 class DeclareNode : public ASTNode{
@@ -48,6 +53,7 @@ private:
 public:
     DeclareNode(std::string, ASTNode* = nullptr);
     llvm::Value* codeGen(Compiler&) override;
+    void print(std::ostream&) override;
 };
 
 class IntConstantNode : public ASTNode{
@@ -56,6 +62,7 @@ private:
 public:
     IntConstantNode(int);
     llvm::Value* codeGen(Compiler&) override;
+    void print(std::ostream&) override;
 };
 class IdExpressionNode : public ASTNode {
 private:
@@ -64,6 +71,7 @@ public:
     IdExpressionNode(std::string);
     llvm::Value* codeGen(Compiler&) override;
     std::string getId() const;
+    void print(std::ostream&) override;
 };
 
 class FuntionCallExpressionNode : public ASTNode {
@@ -73,6 +81,7 @@ private:
 public:
     FuntionCallExpressionNode(std::string, std::vector<ASTNode*>&);
     llvm::Value* codeGen(Compiler&) override;
+    void print(std::ostream&) override;
 };
 
 

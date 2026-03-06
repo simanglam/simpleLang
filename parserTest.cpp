@@ -13,6 +13,9 @@ int main() {
     Parser p("test.txt");
 
     ASTNode* a = nullptr;
-    while ((a = p.parseProgram()));
+    while ((a = p.parseProgram())) {
+        a->print(std::cout);
+        std::cout << endl;
+    }
     
 }

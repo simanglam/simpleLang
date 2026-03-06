@@ -1,6 +1,7 @@
 #include "asts.h"
 #include "compiler.h"
 
+#include <iostream>
 #include <string>
 #include <llvm/IR/Value.h>
 #include <llvm/IR/Module.h>
@@ -9,6 +10,10 @@
 
 using namespace std;
 using namespace llvm;
+
+std::ofstream& operator<<(std::ostream& os, ASTNode* a) {
+    a->print(os);
+}
 
 LabelNode::LabelNode(string _id): id(_id) { }
 
@@ -24,6 +29,10 @@ Value* LabelNode::codeGen(Compiler& c) {
     c.builder->CreateBr(c.lables[id]);
     c.builder->SetInsertPoint(c.lables[id]);
     return c.lables[id];
+}
+
+void LabelNode::print(ostream& os) {
+    os << "Label: " << id;
 }
 
 
@@ -51,6 +60,14 @@ Value* GotoNode::codeGen(Compiler& c) {
     return ins;
 }
 
+void GotoNode::print(ostream& os) {
+    os << "Goto: " << targetLabel;
+    if (cond){
+        os << " with cond: ";
+        cond->print(os);
+    }
+}
+
 BinaryExpressionNode::BinaryExpressionNode(std::string _op, ASTNode* _lhs, ASTNode* _rhs): op(_op), lhs(_lhs), rhs(_rhs) { }
 
 llvm::Value* BinaryExpressionNode::codeGen(Compiler& c) {
@@ -71,6 +88,12 @@ llvm::Value* BinaryExpressionNode::codeGen(Compiler& c) {
     
 }
 
+void BinaryExpressionNode::print(ostream& os) {
+    lhs->print(os);
+    os << " " << op << " ";
+    rhs->print(os);
+}
+
 DeclareNode::DeclareNode(string _id, ASTNode* _initVal): id(_id), initVal(_initVal) { }
 
 llvm::Value* DeclareNode::codeGen(Compiler& c) {
@@ -82,10 +105,22 @@ llvm::Value* DeclareNode::codeGen(Compiler& c) {
     return var;
 }
 
+void DeclareNode::print(ostream& os) {
+    os << "Declare var: " << id;
+    if (initVal) {
+        os << " with init val: ";
+        initVal->print(os);
+    }
+}
+
 IntConstantNode::IntConstantNode(int _val): val(_val) { }
 
 llvm::Value* IntConstantNode::codeGen(Compiler& c) {
     return ConstantInt::get(c.builder->getInt32Ty(), val, true);
+}
+
+void IntConstantNode::print(ostream& os) {
+    os << val << " ";
 }
 
 IdExpressionNode::IdExpressionNode(string _id): id(_id) { }
@@ -94,11 +129,22 @@ llvm::Value* IdExpressionNode::codeGen(Compiler& c) {
     return c.builder->CreateLoad(c.builder->getInt32Ty(), c.vars[id], id);
 }
 
+void IdExpressionNode::print(ostream& os) {
+    os << id << " ";
+}
+
 string IdExpressionNode::getId() const {
     return id;
 }
 
 FuntionCallExpressionNode::FuntionCallExpressionNode(string _id, vector<ASTNode*>& _args): id(_id), args(_args) { }
+
+void FuntionCallExpressionNode::print(ostream& os) {
+    os << id << "(";
+    for (auto arg : args)
+        arg->print(os);
+    os << ")";
+}
 
 Value* FuntionCallExpressionNode::codeGen(Compiler& c) {
     vector<Value*> argVal;
