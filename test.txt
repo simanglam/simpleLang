@@ -1,4 +1,4 @@
-var prev = 1;
+var prev = 0;
 var cur = 0;
 var temp = 0;
 var count = 0;
@@ -10,8 +10,9 @@ inputLoop:
     if (tempInput + 1) goto inputLoop;
 
 inputLoopEnd:
-    if (count) goto fiboStart;
-    goto fiboEnd;
+
+if (count) goto fiboStart;
+goto fiboEnd;
 
 fiboStart:
     temp = cur;
