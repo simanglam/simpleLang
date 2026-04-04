@@ -1,4 +1,4 @@
-TOKEN: "(" ")" "+" "-" "*" "/" "if" "goto" "var" ":"
+TOKEN: "(" ")" "+" "-" "*" "/" "if" "goto" "var" ":" ";"
 
 <TOPLEVEL>:=
     {<STATEMENT>;}
