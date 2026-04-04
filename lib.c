@@ -1,9 +1,12 @@
 #include<stdio.h>
 
 int print(int i) {
-    return putchar(i);
+    return printf("%d", i);
 }
 
 int get() {
-    return getchar();
+    int x = 0;
+    scanf("%d", &x);
+    return x;
 }
+
